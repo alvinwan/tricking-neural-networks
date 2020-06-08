@@ -7,8 +7,8 @@ import numpy as np
 import torch
 import os
 
-from step_2_pretrained import get_idx_to_label, get_image_transform, predict
-from step_3_adversarial import get_adversarial_example, get_inputs
+from step_2_pretrained import get_idx_to_label, get_image_transform, predict, load_image
+from step_3_adversarial import get_adversarial_example
 
 
 TARGET_LABEL = 1
@@ -24,14 +24,14 @@ def get_model():
 def main():
     print(f'Target class: {get_idx_to_label()[str(TARGET_LABEL)]}')
     net, r = get_model()
-    inputs = get_inputs()
+    inputs = load_image()
     labels = Variable(torch.Tensor([TARGET_LABEL])).long()
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD([r], lr=0.1, momentum=0.1)
 
     for i in range(30):
-        r.data.clamp_(-EPSILON, EPSILON)
+        r.data.clamp_(-EPSILON, EPSILON)  # ensure that `r` has magnitude no larger than EPSILON
         optimizer.zero_grad()
 
         # forward + backward + optimize
@@ -42,7 +42,8 @@ def main():
         optimizer.step()
 
         _, pred = torch.max(outputs, 1)
-        print(f'Loss: {loss.item():.2f} / Class: {get_idx_to_label()[str(int(pred))]}')
+        if i % 5 == 0:
+            print(f'Loss: {loss.item():.2f} / Class: {get_idx_to_label()[str(int(pred))]}')
 
     # save r
     np.save('outputs/adversarial_r.npy', r.data.numpy())
@@ -53,7 +54,7 @@ def main():
 
     # check prediction is new class
     print(f'Old prediction: {predict(inputs)}')
-    print(f'New prediction: {predict(adversarial)}')
+    print(f'New prediction: {predict(inputs + r)}')
 
 if __name__ == '__main__':
     main()
