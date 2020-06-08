@@ -7,15 +7,7 @@ import numpy as np
 import os
 import sys
 
-from step_2_pretrained import get_idx_to_label, get_image_transform, predict
-
-
-def get_inputs():
-    assert len(sys.argv) > 1, 'Need to pass path to image'
-    image = Image.open(sys.argv[1])
-    transform = get_image_transform()
-    inputs = transform(image)[None]
-    return inputs
+from step_2_pretrained import get_idx_to_label, get_image_transform, predict, load_image
 
 
 def get_inverse_transform():
@@ -38,7 +30,7 @@ def get_adversarial_example(inputs, r):
 
 
 def main():
-    inputs = get_inputs()
+    inputs = load_image()
     r = torch.Tensor(np.load('assets/adversarial_r.npy'))
 
     # save perturbed image
@@ -47,7 +39,7 @@ def main():
     image.save('outputs/adversarial.png')
 
     # check prediction is new class
-    print(f'New prediction: {predict(image)}')
+    print(f'New prediction: {predict(inputs)}')
 
 
 if __name__ == '__main__':
