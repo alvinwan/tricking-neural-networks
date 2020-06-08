@@ -20,11 +20,16 @@ def get_image_transform():
     ])
     return transform
 
-def predict(image):
+def load_image():
+    assert len(sys.argv) > 1, 'Need to pass path to image'
+    image = Image.open(sys.argv[1])
+
     # transform image into correct format
     transform = get_image_transform()
     image = transform(image)[None]
+    return image
 
+def predict(image):
     # load pretrained ResNet18 model
     model = models.resnet18(pretrained=True)
     model.eval()  # set model in 'evaluation' mode
@@ -39,8 +44,7 @@ def predict(image):
     return cls
 
 def main():
-    assert len(sys.argv) > 1, 'Need to pass path to image'
-    image = Image.open(sys.argv[1])
+    image = load_image()
     print(f'Prediction: {predict(image)}')
 
 if __name__ == '__main__':
