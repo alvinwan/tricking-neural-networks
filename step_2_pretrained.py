@@ -4,6 +4,7 @@ import json
 import torchvision.models as models
 import torchvision.transforms as transforms
 import torch
+import sys
 
 def get_idx_to_label():
     with open("assets/imagenet_idx_to_label.json") as f:
@@ -38,7 +39,8 @@ def predict(image):
     return cls
 
 def main():
-    image = Image.open('assets/dog.jpg')
+    assert len(sys.argv) > 1, 'Need to pass path to image'
+    image = Image.open(sys.argv[1])
     print(f'Prediction: {predict(image)}')
 
 if __name__ == '__main__':
