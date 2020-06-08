@@ -1,4 +1,4 @@
-"""Run ImageNet-pretrained ResNet18 on image of dog"""
+"""Run ImageNet-pretrained ResNet18 on arbitrary image"""
 from PIL import Image
 import json
 import torchvision.models as models
