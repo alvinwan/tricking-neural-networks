@@ -17,9 +17,9 @@ def get_inverse_transform():
 
 
 def tensor_to_image(tensor):
-    x = tensor.data.numpy().transpose(1, 2, 0) * 255.
-    x = np.clip(x, 0, 255)
-    return Image.fromarray(x.astype(np.uint8))
+    x = tensor.data.numpy().transpose(1, 2, 0) * 255.  # tensors are (channel x width x height). Transpose to get (height x width x channels)
+    x = np.clip(x, 0, 255)  # ensure all image values are valid
+    return Image.fromarray(x.astype(np.uint8))  # create image as array of unsigned integers
 
 
 def get_adversarial_example(inputs, r):
@@ -35,11 +35,12 @@ def main():
 
     # save perturbed image
     os.makedirs('outputs', exist_ok=True)
-    image = get_adversarial_example(inputs, r)
-    image.save('outputs/adversarial.png')
+    adversarial = get_adversarial_example(inputs, r)
+    adversarial.save('outputs/adversarial.png')
 
     # check prediction is new class
-    print(f'New prediction: {predict(inputs)}')
+    print(f'Old prediction: {predict(inputs)}')
+    print(f'New prediction: {predict(inputs + r)}')
 
 
 if __name__ == '__main__':

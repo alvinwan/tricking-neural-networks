@@ -49,10 +49,11 @@ def main():
 
     # save perturbed image
     os.makedirs('outputs', exist_ok=True)
-    image = get_adversarial_example(inputs, r)
+    adversarial = get_adversarial_example(inputs, r)
 
     # check prediction is new class
-    print(f'New prediction: {predict(image)}')
+    print(f'Old prediction: {predict(inputs)}')
+    print(f'New prediction: {predict(adversarial)}')
 
 if __name__ == '__main__':
     main()
