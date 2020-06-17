@@ -44,8 +44,8 @@ def predict(image):
     return cls
 
 def main():
-    image = load_image()
-    print(f'Prediction: {predict(image)}')
+    x = load_image()
+    print(f'Prediction: {predict(x)}')
 
 if __name__ == '__main__':
     main()
