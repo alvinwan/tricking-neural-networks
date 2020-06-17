@@ -16,7 +16,7 @@ EPSILON = 10 / 255.
 
 
 def get_model():
-    net = models.resnet18(pretrained=True).eval().float()
+    net = models.resnet18(pretrained=True).eval()
     r = nn.Parameter(data=torch.zeros(1, 3, 224, 224), requires_grad=True)
     return net, r
 
@@ -24,7 +24,7 @@ def get_model():
 def main():
     print(f'Target class: {get_idx_to_label()[str(TARGET_LABEL)]}')
     net, r = get_model()
-    inputs = load_image()
+    x = load_image()
     labels = Variable(torch.Tensor([TARGET_LABEL])).long()
 
     criterion = nn.CrossEntropyLoss()
@@ -35,8 +35,7 @@ def main():
         optimizer.zero_grad()
 
         # forward + backward + optimize
-        x = inputs + r
-        outputs = net(x)
+        outputs = net(x + r)
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()

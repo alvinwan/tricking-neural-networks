@@ -22,10 +22,10 @@ def tensor_to_image(tensor):
     return Image.fromarray(x.astype(np.uint8))  # create image as array of unsigned integers
 
 
-def get_adversarial_example(inputs, r):
-    x = inputs + r
-    x = get_inverse_transform()(x[0])
-    image = tensor_to_image(x)
+def get_adversarial_example(x, r):
+    y = x + r
+    y = get_inverse_transform()(y[0])
+    image = tensor_to_image(y)
     return image
 
 
